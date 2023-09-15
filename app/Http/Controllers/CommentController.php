@@ -32,7 +32,7 @@ class CommentController extends Controller
 
         return response()->json(['message' => 'Comment added successfully']);
     }
-    public function getCommentsByPostId($id)
+    public function   getCommentsByPostId($id)
     {
         $post = Post::find($id);
         if (!$post) {
@@ -40,5 +40,25 @@ class CommentController extends Controller
         }
         $comments = Comment::where('postid', $id)->get();
         return response()->json(['comments' => $comments]);
+    }
+    public function deleteComment($id)
+    {
+        $comment = Comment::find($id);
+        if (!$comment) {
+            return response()->json(['error' => 'Comment not found'], 404);
+        }
+
+
+        $user = auth()->user();
+        if ($user->role == "admin") {
+            $comment->delete();
+            return response()->json(['message' => 'Comment deleted successfully']);
+        }
+        if ($comment->post->uid == auth()->user()->id) {
+
+            $comment->delete();
+            return response()->json(['message' => 'Comment deleted successfully']);
+        }
+        return response()->json(['message' => 'Not Allowed to delete others posts comments']);
     }
 }

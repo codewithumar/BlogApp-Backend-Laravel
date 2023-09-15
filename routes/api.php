@@ -13,12 +13,11 @@ Route::get("/getposts", [PostController::class, "getAllPosts"]);
 Route::get("/getpostbyid/{id}", [PostController::class, "getPostById"]);
 Route::get("/getcomments/{id}", [CommentController::class, "getCommentsByPostId"]);
 
-
 Route::middleware(['auth:sanctum', 'isverified'])->group(function () {
-    ///Post api endpoints
     Route::post("/createpost", [PostController::class, "makePost"]);
     Route::delete("/deletepost/{id}", [PostController::class, "deletePost"]);
     Route::patch("/updatepost/{id}", [PostController::class, "updatePost"]);
+    Route::delete("/deletecomment/{id}", [CommentController::class, "deleteComment"]);
 });
 
 Route::middleware(['auth:sanctum', "isAdmin"])->group(function () {
